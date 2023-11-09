@@ -2,7 +2,7 @@ CREATE DATABASE sales;
 USE sales;
 
 CREATE TABLE sales_data(
-    product_id INT ,
+    product_id INT,
     customer_id INT,
     price INT,
     quantity INT,
