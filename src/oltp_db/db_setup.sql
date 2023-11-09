@@ -3,7 +3,7 @@ USE sales;
 
 CREATE TABLE sales_data(
     product_id INT ,
-    customer_id INT NOT NULL PRIMARY KEY,
+    customer_id INT,
     price INT,
     quantity INT,
     timestamp DATETIME
