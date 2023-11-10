@@ -28,47 +28,27 @@ def mysql_connect() -> mysql.connector.connection.MySQLConnection:
     """
     Connect to MySQL database and return a cursor object.
     """
-    connection = mysql.connector.connect(
+    return mysql.connector.connect(
         user="root",
         password=MYSQL_PW,
         host="127.0.0.1",
         database="sales",
-    )
-    if connection:
-        print("Connected to MySQL")
-    return connection  # type: ignore
+    )  # type: ignore
 
 
 def db2_connect() -> ibm_db.IBM_DBConnection:
     """
     Connect to DB2 database and return a cursor object.
     """
-    dsn = (
-        "DRIVER={0};"
-        "DATABASE={1};"
-        "HOSTNAME={2};"
-        "PORT={3};"
-        "PROTOCOL={4};"
-        "UID={5};"
-        "PWD={6};"
-        "SECURITY={7};"
-    ).format(
-        "{IBM DB2 ODBC DRIVER}",
-        DSN_DATABASE,
-        DSN_HOSTNAME,
-        DSN_PORT,
-        "TCPIP",
-        DSN_UID,
-        DSN_PWD,
-        "SSL",
-    )
-
-    connection = ibm_db.connect(dsn, "", "")
-    if connection:
-        print(f"Connected to DB2 database: {DSN_DATABASE} ")
-        print(f"as user: {DSN_UID}")
-        print(f"on host: {DSN_HOSTNAME}")
-    return connection
+    connection_details = {
+        "database": DSN_DATABASE,
+        "hostname": DSN_HOSTNAME,
+        "port": DSN_PORT,
+        "uid": DSN_UID,
+        "pwd": DSN_PWD
+    }
+    dsn = "DRIVER={{IBM DB2 ODBC DRIVER}};DATABASE={database};HOSTNAME={hostname};PORT={port};PROTOCOL=TCPIP;UID={uid};PWD={pwd};SECURITY=SSL;".format(**connection_details)
+    return ibm_db.connect(dsn, "", "")
 
 
 def get_last_rowid() -> int:
@@ -128,7 +108,9 @@ if __name__ == "__main__":
     # disconnect from mysql warehouse
     mysql_connection = mysql_connect()
     mysql_connection.close()
+    print("Disconnected from MySQL database")
     
     # disconnect from DB2 or PostgreSql data warehouse
     ibm_connection = db2_connect()
     ibm_db.close(ibm_connection)
+    print("Disconnected from DB2 database")
