@@ -1,0 +1,4 @@
+ibm_db_sa
+ibm_db
+mysql-connector-python
+python-dotenv
